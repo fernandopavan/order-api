@@ -4,7 +4,6 @@ import com.projeto.order.security.JWTAuthenticationFilter;
 import com.projeto.order.security.JWTAuthorizationFilter;
 import com.projeto.order.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -36,9 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JWTUtil jwtUtil;
-
-    @Value("${url.front}")
-    private String urlFront;
 
     private static final String[] PUBLIC_MATCHERS = {
             "/status",

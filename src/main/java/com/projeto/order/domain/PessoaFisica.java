@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @PessoaFisicaValid
+@Table(name = "PESSOAS_FISICAS")
 @SequenceGenerator(name = "SEQ_PESSOAS_FISICAS", sequenceName = "SEQ_PESSOAS_FISICAS", allocationSize = 1)
 public class PessoaFisica extends AbstractEntity {
 
@@ -29,6 +30,7 @@ public class PessoaFisica extends AbstractEntity {
     private String nome;
 
     @Email(message = "E-mail inválido")
+    @NotEmpty(message = "Preenchimento do e-mail obrigatório")
     private String email;
 
     @NotEmpty(message = "Preenchimento da senha obrigatória")

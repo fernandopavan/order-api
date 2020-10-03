@@ -1,5 +1,6 @@
 package com.projeto.order.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.projeto.order.domain.pattern.AbstractEntity;
 import com.projeto.order.domain.pattern.EntityBuilder;
 
@@ -16,8 +17,9 @@ public class PedidoProduto extends AbstractEntity {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "pedido_id", referencedColumnName = "id", nullable = false)
-    @NotNull(message = "O enduro regularidade é obrigatório")
+    @NotNull(message = "O pedido é obrigatório")
     private Pedido pedido;
 
     @ManyToOne
@@ -37,8 +39,16 @@ public class PedidoProduto extends AbstractEntity {
         return pedido;
     }
 
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
     public Produto getProduto() {
         return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
     }
 
     public Integer getQuantidade() {

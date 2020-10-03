@@ -43,8 +43,12 @@ public class PessoaFisicaResource {
 
     @ApiOperation("Busca uma pessoa física por nome")
     @GetMapping("/nome")
-    public ResponseEntity<Iterable<PessoaFisica>> findByName(@RequestParam(value = "nome") String name) {
-        Iterable<PessoaFisica> pessoasFisicas = repository.findAll(QPessoaFisica.pessoaFisica.nome.eq(name));
+    public ResponseEntity<Iterable<PessoaFisica>> findByName(@RequestParam(value = "nome") String nome) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (nome != null && !nome.isEmpty()) {
+            booleanBuilder.and(QPessoaFisica.pessoaFisica.nome.containsIgnoreCase(nome));
+        }
+        Iterable<PessoaFisica> pessoasFisicas = repository.findAll(booleanBuilder);
         return ResponseEntity.ok().body(pessoasFisicas);
     }
 

@@ -1,6 +1,7 @@
 package com.projeto.order.domain.validation;
 
 import com.projeto.order.domain.PessoaFisica;
+import com.projeto.order.domain.QPessoaFisica;
 import com.projeto.order.repositories.PessoaFisicaRepository;
 import com.projeto.order.resources.exception.FieldMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class PessoaFisicaValidator implements ConstraintValidator<PessoaFisicaVa
             return true;
         }
 
-        Integer id = pessoaFisica.getId();
+        Long id = pessoaFisica.getId();
 
         list.addAll(existsEmail(list, id, pessoaFisica.getEmail()));
 
@@ -43,8 +44,8 @@ public class PessoaFisicaValidator implements ConstraintValidator<PessoaFisicaVa
         return list.isEmpty();
     }
 
-    private List<FieldMessage> existsEmail(List<FieldMessage> list, Integer id, String email) {
-        PessoaFisica existsEmail = repo.findByEmail(email);
+    private List<FieldMessage> existsEmail(List<FieldMessage> list, Long id, String email) {
+        PessoaFisica existsEmail = repo.findOne(QPessoaFisica.pessoaFisica.email.eq(email)).get();
 
         if ((id == null && existsEmail != null) || (id != null && existsEmail != null && !id.equals(existsEmail.getId()))) {
             list.add(new FieldMessage("email", "Email já existente"));

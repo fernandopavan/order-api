@@ -32,8 +32,8 @@ public class Pedido extends AbstractEntity {
 
     private BigDecimal desconto;
 
-    @NotEmpty(message = "Preenchimento de produtos é obrigatório")
-    @OneToMany(mappedBy = "pedidoProduto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //    @NotEmpty(message = "Preenchimento de produtos do pedido é obrigatório")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<PedidoProduto> pedidoProdutos = new HashSet<>();
 
     private Boolean fechado;
@@ -88,7 +88,7 @@ public class Pedido extends AbstractEntity {
             return new Builder(entity, State.BUILT);
         }
 
-        public Builder nome(String descricao) {
+        public Builder descricao(String descricao) {
             entity.descricao = descricao;
             return this;
         }
@@ -111,6 +111,7 @@ public class Pedido extends AbstractEntity {
         public Builder pedidoProdutos(Collection<PedidoProduto> pedidoProdutos) {
             entity.pedidoProdutos.clear();
             entity.pedidoProdutos.addAll(pedidoProdutos);
+            entity.pedidoProdutos.forEach(value -> value.setPedido(entity));
             return this;
         }
 

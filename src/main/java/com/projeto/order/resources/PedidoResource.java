@@ -44,7 +44,8 @@ public class PedidoResource {
     @Transactional
     @PostMapping
     public ResponseEntity<Pedido> insert(@Valid @RequestBody Pedido pedido) {
-        return ResponseEntity.ok().body(repository.save(pedido));
+        ;
+        return ResponseEntity.ok().body(service.insert(pedido));
     }
 
     @ApiOperation("Atualiza um pedido")
@@ -78,7 +79,7 @@ public class PedidoResource {
     public ResponseEntity<Page<Pedido>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit,
-            @RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
+            @RequestParam(value = "orderBy", defaultValue = "descricao") String orderBy,
             @RequestParam(value = "direction", defaultValue = "ASC") String direction,
             @RequestParam(value = "descricao", defaultValue = "") String descricao) {
 

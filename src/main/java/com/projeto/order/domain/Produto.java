@@ -25,7 +25,6 @@ public class Produto extends AbstractEntity {
     @NotNull(message = "Preenchimento do preço é obrigatório")
     private BigDecimal preco;
 
-    @NotNull(message = "Preenchimento do campo se é produto ou serviço é obrigatório")
     private Boolean servico;
 
     private Boolean inativo;

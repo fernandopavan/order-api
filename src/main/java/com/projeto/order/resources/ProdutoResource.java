@@ -4,12 +4,10 @@ import com.projeto.order.domain.Produto;
 import com.projeto.order.domain.QProduto;
 import com.projeto.order.repositories.ProdutoRepository;
 import com.projeto.order.services.ProdutoService;
-import com.projeto.order.services.exceptions.DataIntegrityException;
 import com.querydsl.core.BooleanBuilder;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -59,12 +57,7 @@ public class ProdutoResource {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        try {
-            repository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityException("Não é possível excluir porque há dados relacionados");
-        }
-
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -78,7 +71,7 @@ public class ProdutoResource {
     public ResponseEntity<Page<Produto>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit,
-            @RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
+            @RequestParam(value = "orderBy", defaultValue = "descricao") String orderBy,
             @RequestParam(value = "direction", defaultValue = "ASC") String direction,
             @RequestParam(value = "descricao", defaultValue = "") String descricao) {
 
