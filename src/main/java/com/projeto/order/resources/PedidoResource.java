@@ -44,7 +44,6 @@ public class PedidoResource {
     @Transactional
     @PostMapping
     public ResponseEntity<Pedido> insert(@Valid @RequestBody Pedido pedido) {
-        ;
         return ResponseEntity.ok().body(service.insert(pedido));
     }
 
@@ -67,6 +66,17 @@ public class PedidoResource {
         }
 
         return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation("Busca pedidos por descrição")
+    @GetMapping("/descricao")
+    public ResponseEntity<Iterable<Pedido>> findByDescricao(@RequestParam(value = "descricao") String descricao) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (descricao != null && !descricao.isEmpty()) {
+            booleanBuilder.and(QPedido.pedido.descricao.containsIgnoreCase(descricao));
+        }
+        Iterable<Pedido> produtos = repository.findAll(booleanBuilder);
+        return ResponseEntity.ok().body(produtos);
     }
 
     @ApiOperation(value = "Retorna uma lista de pedidos paginada")

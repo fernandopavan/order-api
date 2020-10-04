@@ -2,12 +2,15 @@ package com.projeto.order.resources;
 
 import com.projeto.order.domain.Produto;
 import com.projeto.order.domain.QProduto;
+import com.projeto.order.domain.validation.ProdutoValid;
 import com.projeto.order.repositories.ProdutoRepository;
 import com.projeto.order.services.ProdutoService;
+import com.projeto.order.services.exceptions.DataIntegrityException;
 import com.querydsl.core.BooleanBuilder;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -55,10 +58,26 @@ public class ProdutoResource {
 
     @ApiOperation("Remove um produto")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ProdutoValid
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        service.delete(id);
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityException("Não é possível excluir porque há dados relacionados");
+        }
         return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation("Busca produtos por descrição")
+    @GetMapping("/descricao")
+    public ResponseEntity<Iterable<Produto>> findByDescricao(@RequestParam(value = "descricao") String descricao) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (descricao != null && !descricao.isEmpty()) {
+            booleanBuilder.and(QProduto.produto.descricao.containsIgnoreCase(descricao));
+        }
+        Iterable<Produto> produtos = repository.findAll(booleanBuilder);
+        return ResponseEntity.ok().body(produtos);
     }
 
     @ApiOperation(value = "Retorna uma lista de produtos paginada")

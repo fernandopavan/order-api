@@ -3,6 +3,7 @@ package com.projeto.order.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.projeto.order.domain.pattern.AbstractEntity;
 import com.projeto.order.domain.pattern.EntityBuilder;
+import com.projeto.order.domain.validation.PedidoValid;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@PedidoValid
 @Table(name = "PEDIDOS")
 @SequenceGenerator(name = "SEQ_PEDIDOS", sequenceName = "SEQ_PEDIDOS", allocationSize = 1)
 public class Pedido extends AbstractEntity {
@@ -31,6 +33,8 @@ public class Pedido extends AbstractEntity {
     private LocalDateTime dataHora;
 
     private BigDecimal desconto;
+
+    private BigDecimal valorTotal;
 
     //    @NotEmpty(message = "Preenchimento de produtos do pedido é obrigatório")
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -55,23 +59,16 @@ public class Pedido extends AbstractEntity {
         return desconto;
     }
 
+    public BigDecimal getValorTotal() {
+        return valorTotal;
+    }
+
     public Set<PedidoProduto> getPedidoProdutos() {
         return pedidoProdutos;
     }
 
     public Boolean getFechado() {
-        return fechado;
-    }
-
-    public BigDecimal getValorTotal() {
-//		BigDecimal totalProdutos = produtos.stream()
-//				.map(PedidoProduto::getProduto)
-//				.filter()
-//				.map()
-//				.reduce(BigDecimal.ZERO, );
-//
-//		return totalProdutos.subtract(desconto);
-        return BigDecimal.ONE;
+        return fechado != null && fechado;
     }
 
     public static final class Builder extends EntityBuilder<Pedido> {
@@ -100,6 +97,19 @@ public class Pedido extends AbstractEntity {
 
         public Builder desconto(BigDecimal desconto) {
             entity.desconto = desconto;
+            return this;
+        }
+
+        public Builder valorTotal(BigDecimal valorTotal) {
+            entity.valorTotal = valorTotal;
+            BigDecimal desconto = BigDecimal.ZERO;
+
+            if (!entity.fechado && !entity.desconto.equals(BigDecimal.ZERO)) {
+                desconto = entity.valorTotal.multiply(entity.desconto.divide(BigDecimal.valueOf(100)));
+            }
+
+            entity.valorTotal = entity.valorTotal.subtract(desconto);
+
             return this;
         }
 

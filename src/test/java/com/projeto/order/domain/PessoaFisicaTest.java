@@ -11,7 +11,7 @@ import java.util.Collections;
 class PessoaFisicaTest {
 
     @Test
-    public void deveCriarUmaPessoaFisicaAPartirDoBuilder() {
+    public void deveCriarAPartirDoBuilder() {
         PessoaFisica pessoaFisica = PessoaFisica.Builder.create()
                 .nome("Nome 1")
                 .email("teste@gmail.com")

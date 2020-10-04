@@ -43,11 +43,11 @@ public class Produto extends AbstractEntity {
     }
 
     public Boolean getServico() {
-        return servico;
+        return servico != null && servico;
     }
 
     public Boolean getInativo() {
-        return inativo;
+        return inativo != null && inativo;
     }
 
     public static final class Builder extends EntityBuilder<Produto> {

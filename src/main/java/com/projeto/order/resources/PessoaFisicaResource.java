@@ -81,7 +81,7 @@ public class PessoaFisicaResource {
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
         try {
-            if (id.equals(1)) {
+            if (id.equals(1L)) {
                 throw new DataIntegrityException("Não é possivel excluir a primeira pessoa física do sistema :( !");
             }
             repository.deleteById(id);

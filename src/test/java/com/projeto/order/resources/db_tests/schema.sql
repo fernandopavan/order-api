@@ -15,19 +15,11 @@ create table pessoa_fisica (
     created_in timestamp not null,
     updated_in timestamp,
     version int4,
-    cpf varchar(255),
-    data_nascimento date not null,
     email varchar(255),
-    nacionalidade varchar(50),
-    naturalidade varchar(50),
     nome varchar(120),
     senha varchar(255),
-    sexo int4,
     primary key (id)
 );
-
-alter table pessoa_fisica
-    add constraint UK_cpf unique (cpf);
 
 alter table pessoa_fisica
     add constraint UK_email unique (email);
