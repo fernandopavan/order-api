@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/pessoas-fisicas")
@@ -36,7 +37,7 @@ public class PessoaFisicaResource {
 
     @ApiOperation("Busca uma pessoa física por Id")
     @GetMapping("/{id}")
-    public ResponseEntity<PessoaFisica> find(@PathVariable Long id) {
+    public ResponseEntity<PessoaFisica> find(@PathVariable UUID id) {
         PessoaFisica obj = service.find(id);
         return ResponseEntity.ok().body(obj);
     }
@@ -72,16 +73,16 @@ public class PessoaFisicaResource {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @Transactional
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody PessoaFisica pessoaFisica, @PathVariable Long id) {
+    public ResponseEntity update(@Valid @RequestBody PessoaFisica pessoaFisica, @PathVariable UUID id) {
         return ResponseEntity.ok().body(service.update(pessoaFisica, id));
     }
 
     @ApiOperation("Remove uma pessoa física")
     @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable UUID id) {
         try {
-            if (id.equals(1L)) {
+            if (!repository.exists(QPessoaFisica.pessoaFisica.id.ne(id))) {
                 throw new DataIntegrityException("Não é possivel excluir a primeira pessoa física do sistema :( !");
             }
             repository.deleteById(id);

@@ -2,16 +2,14 @@ package com.projeto.order.services;
 
 import com.projeto.order.domain.Pedido;
 import com.projeto.order.domain.PedidoProduto;
-import com.projeto.order.domain.Produto;
 import com.projeto.order.repositories.PedidoProdutoRepository;
 import com.projeto.order.repositories.PedidoRepository;
 import com.projeto.order.services.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class PedidoService {
@@ -26,7 +24,7 @@ public class PedidoService {
         this.pedidoProdutoRepository = pedidoProdutoRepository;
     }
 
-    public Pedido find(Long id) {
+    public Pedido find(UUID id) {
         Optional<Pedido> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
                 "Objeto não encontrado! Id: " + id + ", Tipo: " + Pedido.class.getName()));
@@ -38,7 +36,7 @@ public class PedidoService {
                 .desconto(obj.getDesconto())
                 .dataHora(LocalDateTime.now())
                 .fechado(obj.getFechado())
-                .valorTotal(getValorTotalSemDesconto(obj.getPedidoProdutos()))
+                .valorTotal(obj.getPedidoProdutos())
                 .build());
 
         for (PedidoProduto pp : obj.getPedidoProdutos()) {
@@ -47,10 +45,10 @@ public class PedidoService {
         }
 
         pedidoProdutoRepository.saveAll(obj.getPedidoProdutos());
-        return obj;
+        return pedido;
     }
 
-    public Pedido update(Pedido obj, Long id) {
+    public Pedido update(Pedido obj, UUID id) {
         Pedido pedido = find(id);
         pedidoProdutoRepository.deleteAll(pedido.getPedidoProdutos());
 
@@ -63,24 +61,10 @@ public class PedidoService {
                 .desconto(obj.getFechado() ? pedido.getDesconto() : obj.getDesconto())
                 .fechado(obj.getFechado())
                 .pedidoProdutos(obj.getPedidoProdutos())
-                .valorTotal(obj.getFechado() ? pedido.getValorTotal() : getValorTotalSemDesconto(obj.getPedidoProdutos()))
+                .valorTotal(obj.getPedidoProdutos())
                 .build());
 
-        return obj;
-    }
-
-    private BigDecimal getValorTotalSemDesconto(Set<PedidoProduto> pedidoProdutos) {
-        BigDecimal valorTotal = BigDecimal.ZERO;
-
-        for (PedidoProduto pedidoProduto : pedidoProdutos) {
-            Produto produto = pedidoProduto.getProduto();
-            if (!produto.getServico()) {
-                BigDecimal total = produto.getPreco().multiply(BigDecimal.valueOf(pedidoProduto.getQuantidade()));
-                valorTotal = valorTotal.add(total);
-            }
-        }
-
-        return valorTotal;
+        return pedido;
     }
 
 }

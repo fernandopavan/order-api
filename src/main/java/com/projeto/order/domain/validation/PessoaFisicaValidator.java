@@ -11,6 +11,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class PessoaFisicaValidator implements ConstraintValidator<PessoaFisicaValid, PessoaFisica> {
@@ -30,7 +31,7 @@ public class PessoaFisicaValidator implements ConstraintValidator<PessoaFisicaVa
             return true;
         }
 
-        Long id = pessoaFisica.getId();
+        UUID id = pessoaFisica.getId();
 
         list.addAll(existsEmail(list, id, pessoaFisica.getEmail()));
 
@@ -43,7 +44,7 @@ public class PessoaFisicaValidator implements ConstraintValidator<PessoaFisicaVa
         return list.isEmpty();
     }
 
-    private List<FieldMessage> existsEmail(List<FieldMessage> list, Long id, String email) {
+    private List<FieldMessage> existsEmail(List<FieldMessage> list, UUID id, String email) {
         PessoaFisica existsEmail = repository.findOne(QPessoaFisica.pessoaFisica.email.eq(email)).orElse(null);
 
         if ((id == null && existsEmail != null) || (id != null && existsEmail != null && !id.equals(existsEmail.getId()))) {

@@ -8,15 +8,16 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table(name = "PRODUTOS")
-@SequenceGenerator(name = "SEQ_PRODUTOS", sequenceName = "SEQ_PRODUTOS", allocationSize = 1)
 public class Produto extends AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PRODUTOS")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, unique = true, nullable = false)
+    private UUID id;
 
     @NotEmpty(message = "Preenchimento da descrição é obrigatório")
     @Length(min = 3, max = 120, message = "A descrição deve ter entre {min} e {max} caracteres")
@@ -30,7 +31,7 @@ public class Produto extends AbstractEntity {
     private Boolean inativo;
 
     @Override
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

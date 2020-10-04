@@ -9,7 +9,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class IntegrationTest {
+class IntegrationDbTest {
 
     @LocalServerPort
     private int port;

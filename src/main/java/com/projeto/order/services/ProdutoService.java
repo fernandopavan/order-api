@@ -6,6 +6,7 @@ import com.projeto.order.services.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProdutoService {
@@ -16,13 +17,13 @@ public class ProdutoService {
         this.repository = repository;
     }
 
-    public Produto find(Long id) {
+    public Produto find(UUID id) {
         Optional<Produto> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
                 "Objeto não encontrado! Id: " + id + ", Tipo: " + Produto.class.getName()));
     }
 
-    public Produto update(Produto produto, Long id) {
+    public Produto update(Produto produto, UUID id) {
         Produto entity = find(id);
 
         Produto build = Produto.Builder.from(entity)

@@ -7,12 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class UserSS implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private UUID id;
     private String email;
     private String senha;
     private Collection<? extends GrantedAuthority> authorities;
@@ -20,7 +21,7 @@ public class UserSS implements UserDetails {
     public UserSS() {
     }
 
-    public UserSS(Long id, String email, String senha, Set<Perfil> perfis) {
+    public UserSS(UUID id, String email, String senha, Set<Perfil> perfis) {
         super();
         this.id = id;
         this.email = email;
@@ -28,7 +29,7 @@ public class UserSS implements UserDetails {
         this.authorities = perfis.stream().map(x -> new SimpleGrantedAuthority(x.getDescricao())).collect(Collectors.toList());
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

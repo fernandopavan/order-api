@@ -6,15 +6,16 @@ import com.projeto.order.domain.pattern.EntityBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Entity
 @Table(name = "PEDIDOS_PRODUTOS")
-@SequenceGenerator(name = "SEQ_PEDIDOS_PRODUTOS", sequenceName = "SEQ_PEDIDOS_PRODUTOS", allocationSize = 1)
 public class PedidoProduto extends AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PEDIDOS_PRODUTOS")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, unique = true, nullable = false)
+    private UUID id;
 
     @ManyToOne
     @JsonIgnore
@@ -31,7 +32,7 @@ public class PedidoProduto extends AbstractEntity {
     private Integer quantidade;
 
     @Override
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

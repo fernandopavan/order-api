@@ -13,16 +13,17 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @PedidoValid
 @Table(name = "PEDIDOS")
-@SequenceGenerator(name = "SEQ_PEDIDOS", sequenceName = "SEQ_PEDIDOS", allocationSize = 1)
 public class Pedido extends AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PEDIDOS")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, unique = true, nullable = false)
+    private UUID id;
 
     @NotEmpty(message = "Preenchimento da descrição é obrigatório")
     @Length(min = 3, max = 120, message = "A descrição deve ter entre {min} e {max} caracteres")
@@ -43,7 +44,7 @@ public class Pedido extends AbstractEntity {
     private Boolean fechado;
 
     @Override
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -100,15 +101,26 @@ public class Pedido extends AbstractEntity {
             return this;
         }
 
-        public Builder valorTotal(BigDecimal valorTotal) {
-            entity.valorTotal = valorTotal;
+        public Builder valorTotal(Set<PedidoProduto> pedidoProdutos) {
+            entity.valorTotal = BigDecimal.ZERO;
             BigDecimal desconto = BigDecimal.ZERO;
 
-            if (!entity.fechado && !entity.desconto.equals(BigDecimal.ZERO)) {
-                desconto = entity.valorTotal.multiply(entity.desconto.divide(BigDecimal.valueOf(100)));
+            for (PedidoProduto pedidoProduto : pedidoProdutos) {
+                Produto produto = pedidoProduto.getProduto();
+                if (!produto.getServico()) {
+                    BigDecimal total = produto.getPreco().multiply(BigDecimal.valueOf(pedidoProduto.getQuantidade()));
+
+                    if (!entity.desconto.equals(BigDecimal.ZERO)) {
+                        desconto = total.multiply(entity.desconto.divide(BigDecimal.valueOf(100)));
+                    }
+
+                    entity.valorTotal = entity.valorTotal.add(total.subtract(desconto));
+                } else {
+                    BigDecimal total = produto.getPreco().multiply(BigDecimal.valueOf(pedidoProduto.getQuantidade()));
+                    entity.valorTotal = entity.valorTotal.add(total);
+                }
             }
 
-            entity.valorTotal = entity.valorTotal.subtract(desconto);
 
             return this;
         }

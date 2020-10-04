@@ -1,7 +1,9 @@
 package com.projeto.order.domain.pattern;
 
+import java.util.UUID;
+
 public interface IEntity {
 
-    Long getId();
+    UUID getId();
 
 }

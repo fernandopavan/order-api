@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/pedidos")
@@ -34,7 +35,7 @@ public class PedidoResource {
 
     @ApiOperation("Busca um pedido por Id")
     @GetMapping("/{id}")
-    public ResponseEntity<Pedido> find(@PathVariable Long id) {
+    public ResponseEntity<Pedido> find(@PathVariable UUID id) {
         Pedido obj = service.find(id);
         return ResponseEntity.ok().body(obj);
     }
@@ -51,14 +52,14 @@ public class PedidoResource {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @Transactional
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody Pedido pedido, @PathVariable Long id) {
+    public ResponseEntity update(@Valid @RequestBody Pedido pedido, @PathVariable UUID id) {
         return ResponseEntity.ok().body(service.update(pedido, id));
     }
 
     @ApiOperation("Remove um pedido")
     @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable UUID id) {
         try {
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e) {

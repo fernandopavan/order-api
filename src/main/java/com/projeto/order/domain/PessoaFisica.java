@@ -13,17 +13,18 @@ import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
 @PessoaFisicaValid
 @Table(name = "PESSOAS_FISICAS")
-@SequenceGenerator(name = "SEQ_PESSOAS_FISICAS", sequenceName = "SEQ_PESSOAS_FISICAS", allocationSize = 1)
 public class PessoaFisica extends AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PESSOAS_FISICAS")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, unique = true, nullable = false)
+    private UUID id;
 
     @NotEmpty(message = "Preenchimento do nome obrigatório")
     @Length(min = 3, max = 120, message = "O nome deve ter entre {min} e {max} caracteres")
@@ -41,7 +42,7 @@ public class PessoaFisica extends AbstractEntity {
     private Set<Integer> perfis = new HashSet<>();
 
     @Override
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

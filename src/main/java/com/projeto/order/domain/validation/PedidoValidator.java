@@ -14,6 +14,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -46,7 +47,7 @@ public class PedidoValidator implements ConstraintValidator<PedidoValid, Pedido>
     }
 
     private List<FieldMessage> existsProdutoInativo(List<FieldMessage> list, Collection<PedidoProduto> pedidoProdutos) {
-        List<Long> produtosIds = pedidoProdutos.stream().map(PedidoProduto::getProduto).map(Produto::getId).collect(Collectors.toList());
+        List<UUID> produtosIds = pedidoProdutos.stream().map(PedidoProduto::getProduto).map(Produto::getId).collect(Collectors.toList());
 
         boolean existsProdutoInativo = produtoRepository.exists(QProduto.produto.id.in(produtosIds).and(QProduto.produto.inativo.isTrue()));
 

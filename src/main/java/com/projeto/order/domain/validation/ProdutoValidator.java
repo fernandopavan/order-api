@@ -11,6 +11,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class ProdutoValidator implements ConstraintValidator<ProdutoValid, Produto> {
@@ -41,7 +42,7 @@ public class ProdutoValidator implements ConstraintValidator<ProdutoValid, Produ
         return list.isEmpty();
     }
 
-    private List<FieldMessage> produtoEmUso(List<FieldMessage> list, Long id) {
+    private List<FieldMessage> produtoEmUso(List<FieldMessage> list, UUID id) {
         if (id == null) {
             return list;
         }
