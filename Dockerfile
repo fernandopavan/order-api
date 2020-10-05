@@ -6,6 +6,6 @@ ARG JAR_FILE=target/order-api-*.jar
 
 WORKDIR /opt/app
 
-COPY ${JAR_FILE} apply-api.jar
+COPY ${JAR_FILE} order-api.jar
 
-ENTRYPOINT ["java","-jar","apply-api.jar"]
+ENTRYPOINT ["java","-jar","order-api.jar"]
